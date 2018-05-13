@@ -38,6 +38,10 @@ public class ChatListenerBungee implements Listener {
             partialPlayerName = partialPlayerName.substring(lastSpaceIndex + 1);
         }
 
+        if (event.getCursor().startsWith("/")) {
+            return;
+        }
+
         for (ProxiedPlayer p : BungeeMain.get().getProxy().getPlayers()) {
             if (p.getName().toLowerCase().startsWith(partialPlayerName)) {
                 event.getSuggestions().add(p.getName());
