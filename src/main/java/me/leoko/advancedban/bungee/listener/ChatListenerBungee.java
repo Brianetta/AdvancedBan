@@ -8,10 +8,14 @@ import net.md_5.bungee.api.event.TabCompleteEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
+import java.util.List;
+
 /**
  * Created by Leoko @ dev.skamps.eu on 24.07.2016.
  */
 public class ChatListenerBungee implements Listener {
+
+    static private List<String> allCommands = Universal.getAllCommands();
 
     @EventHandler
     public void onChat(ChatEvent event) {
@@ -32,14 +36,23 @@ public class ChatListenerBungee implements Listener {
     @EventHandler
     public void onTabComplete(TabCompleteEvent event) {
         String partialPlayerName = event.getCursor().toLowerCase();
+        boolean returnEarly = true;
 
         int lastSpaceIndex = partialPlayerName.lastIndexOf(' ');
         if (lastSpaceIndex >= 0) {
             partialPlayerName = partialPlayerName.substring(lastSpaceIndex + 1);
         }
 
-        if (event.getCursor().startsWith("/")) {
-            return;
+        String cursor = event.getCursor();
+        if (cursor.startsWith("/")) {
+            for (String command : allCommands) {
+                if ((command).startsWith(cursor)) {
+                    event.getSuggestions().add(command);
+                    returnEarly = false;
+                }
+            }
+            // It's a command, but not one of ours.
+            if (returnEarly) return;
         }
 
         for (ProxiedPlayer p : BungeeMain.get().getProxy().getPlayers()) {
