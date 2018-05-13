@@ -1,27 +1,25 @@
 package me.leoko.advancedban;
 
 import com.google.common.base.Charsets;
+import me.leoko.advancedban.bungee.BungeeMethods;
+import me.leoko.advancedban.manager.*;
+import me.leoko.advancedban.utils.InterimData;
+import me.leoko.advancedban.utils.Punishment;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.config.Configuration;
+import net.md_5.bungee.config.ConfigurationProvider;
+import net.md_5.bungee.config.YamlConfiguration;
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-import me.leoko.advancedban.bungee.BungeeMethods;
-import me.leoko.advancedban.manager.DatabaseManager;
-import me.leoko.advancedban.manager.LogManager;
-import me.leoko.advancedban.manager.PunishmentManager;
-import me.leoko.advancedban.manager.UUIDManager;
-import me.leoko.advancedban.manager.UpdateManager;
-import me.leoko.advancedban.utils.InterimData;
-import me.leoko.advancedban.utils.Punishment;
-import net.md_5.bungee.api.ChatColor;
-import org.apache.commons.io.FileUtils;
+import java.util.*;
 
 /**
  * Created by Leoko @ dev.skamps.eu on 23.07.2016.
@@ -273,5 +271,15 @@ public class Universal {
             System.out.print("An error has ocurred writing to 'debug.log' file.");
             System.out.print(ex.getMessage());
         }
+    }
+
+    public static List<String> getAllCommands() {
+        List<String> returnedCommands = new ArrayList();
+        InputStream resourceAsStream = MethodInterface.class.getResourceAsStream("/plugin.yml");
+        Configuration configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(resourceAsStream);
+        for (String command : configuration.getSection("commands").getKeys()) {
+            returnedCommands.add("/"+command);
+        }
+        return returnedCommands;
     }
 }
